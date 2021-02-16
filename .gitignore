@@ -1,0 +1,15 @@
+.idea
+idea
+vscode
+.vscode
+
+
+env
+.env
+config.ini
+.env.dev
+__pycache__/
+*/__pycache__/
+*.py[cod]
+.pyc
+*.pyc
