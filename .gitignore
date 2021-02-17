@@ -4,10 +4,10 @@ vscode
 .vscode
 
 
-env
-.env
+venv
+.venv
 config.ini
-.env.dev
+.venv.dev
 __pycache__/
 */__pycache__/
 *.py[cod]
