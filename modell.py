@@ -7,8 +7,8 @@ class coronaSIR:
     Y = 0.1 #Hvor lang tid det tar før en passient bblir frisk
     deltaT = 1
     
-    def __init__(self, sted, sted_populasjon, beta):
-        self.name = sted #Område navn. 
+    def __init__(self, posisjon, sted_populasjon, beta):
+        self.posisjon = posisjon #Område navn. 
         self.pop = sted_populasjon #Populasjonen til det område
         self.beta = beta #Beta verdien er hvor ofte folk omgås i det område
         self.suseptible = [sted_populasjon] #Hvor mange som er "Suseptible" i område
@@ -27,5 +27,6 @@ class coronaSIR:
             #Funksjon for å finne ut ny I: I + (B * S * I)/Pop - (Y * I)
     
     def ny_R(self): #Sette ny verdi til "recoverd"
-        self.recoverd.append(self.recoverd + (Y*self.infected[-2]))
+        self.recoverd.append(self.recoverd[-1] + (Y*self.infected[-2]))
             #Funksjon for å finne ut ny R: R + (Y * I)
+            
