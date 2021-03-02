@@ -22,11 +22,13 @@ class coronaSIR:
         
     def ny_I(self): #Sette ny verdie til "infected"
         self.infected.append(self.infected[-1] + 
-            (self.beta*self.suseptible[-2]*self.infected[-1])/self.pop)
+            ((self.beta*self.suseptible[-2]*self.infected[-1])/self.pop))
             #- Y*self.infected[-1]))
             #Funksjon for å finne ut ny I: I + (B * S * I)/Pop - (Y * I)
     
     #def ny_R(self): #Sette ny verdi til "recoverd"
         #self.recoverd.append(self.recoverd[-1] + (Y*self.infected[-2]))
             #Funksjon for å finne ut ny R: R + (Y * I)
+            
+    def Spredning(self): 
             
