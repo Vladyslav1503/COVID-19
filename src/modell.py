@@ -12,7 +12,7 @@ class coronaSIR:
         self.pop = sted_populasjon #Populasjonen til det område
         self.beta = beta #Beta verdien er hvor ofte folk omgås i det område
         self.suseptible = [sted_populasjon] #Hvor mange som er "Suseptible" i område
-        self.infected = [0] #Hvor mange som er "infected" i område
+        self.infected = [0]#Hvor mange som er "infected" i område
         #self.recoverd = [0] #Hvor mange som har "recoverd" i område
         
     def ny_S(self): #Sette ny verdi til "suseptible"
@@ -31,4 +31,8 @@ class coronaSIR:
             #Funksjon for å finne ut ny R: R + (Y * I)
             
     def Spredning(self): 
+        if self.infected == 0:
+            self.infected = 1
             
+
+    
