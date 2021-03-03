@@ -3,10 +3,14 @@ from typing import Callable
 __cached = {}
 
 
+# TODO comments
 def caching(function: Callable, *args):
     global __cached
     if function in __cached.keys():
-        if args:
+        if args and args in __cached[function].keys():
+            return __cached[function][args]
+        elif args and args not in __cached[function].keys():
+            __cached[function][args] = function(*args)
             return __cached[function][args]
 
         return __cached[function]

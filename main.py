@@ -1,18 +1,5 @@
-import math
-import numpy as np
-import pygame
-import cv2
+from src.preprocessing import image_preprocessing
 
-x = 1
-y = 1
-All_infected = True
+IMAGE_SRC = "./src/images/VerdenPopMindre.png"
 
-while x < 1000:
-    image = cv2.imread("./src/images/VerdenPopMindre.png")
-    p = image[x, y]
-    white = np.array([255, 255, 255])
-    comparioson_white = p == white
-    if not comparioson_white.all():
-        print(p)
-    x += 1
-    y += 1
+population_points = image_preprocessing(IMAGE_SRC)
