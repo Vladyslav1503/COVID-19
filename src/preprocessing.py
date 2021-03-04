@@ -13,7 +13,7 @@ def image_preprocessing(image: str):
     population_mask_points = {key: cv2.findNonZero(cv2.inRange(img, value, value)).tolist() for key, value in
                               population_by_colors.items()}
     reverse_population_points = {tuple(*i): key for key, value in population_mask_points.items() for i in value}
-    borders, _ = cv2.findContours(border_color, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    preprocessed_borders = tuple(tuple(*i[0]) for i in borders)
+    borders = cv2.findNonZero(border_color).tolist()
+    preprocessed_borders = tuple(tuple(i[0]) for i in borders)
 
     return reverse_population_points, preprocessed_borders

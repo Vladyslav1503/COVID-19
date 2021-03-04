@@ -29,13 +29,15 @@ class coronaSIR:
         # - Y*self.infected[-1]))
         # Funksjon for å finne ut ny I: I + (B * S * I)/Pop - (Y * I)
 
-    # def ny_R(self): #Sette ny verdi til "recoverd"
-    # self.recoverd.append(self.recoverd[-1] + (Y*self.infected[-2]))
-    # Funksjon for å finne ut ny R: R + (Y * I)
-   
+        # def ny_R(self): #Sette ny verdi til "recoverd"
+        # self.recoverd.append(self.recoverd[-1] + (Y*self.infected[-2]))
+        # Funksjon for å finne ut ny R: R + (Y * I)
+
     def Spredning(self): 
         if self.infected == 0:
             self.infected = 1
             
 pixler = []
 pixler.append( coronaSIR((1,1), 100, 0,1, "1 - 5") )
+
+
