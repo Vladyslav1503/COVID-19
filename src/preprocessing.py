@@ -27,3 +27,28 @@ def image_preprocessing(image: str):
     preprocessed_borders = tuple(tuple(i[0]) for i in borders)  # сделать координаты более читаемыми
 
     return reverse_population_points, preprocessed_borders
+
+
+def spread_infection(pixel: tuple, infected: set, borders: tuple) -> tuple:
+    """
+    Finding available pixels for infection
+
+    :param pixel: coordinates of the pixel
+    :param infected: set of already infected pixels
+    :param borders: tuple of county borders
+    :return: tuple of available for infection pixels
+    """
+    finding_neighboring_pixel = {1: lambda x: (x[0] - 1, x[1]),
+                                 2: lambda x: (x[0] - 1, x[1] - 1),
+                                 3: lambda x: (x[0], x[1] - 1),
+                                 4: lambda x: (x[0] + 1, x[1] - 1),
+                                 5: lambda x: (x[0] + 1, x[1]),
+                                 6: lambda x: (x[0] + 1, x[1] + 1),
+                                 7: lambda x: (x[0], x[1] + 1),
+                                 8: lambda x: (x[0] - 1, x[1] + 1)}
+    # set of 8 neighbor pixels
+    neighboring_pixels = {finding_neighboring_pixel[i](pixel) for i in finding_neighboring_pixel.keys()}
+    # removing pixels that are infected or border
+    available_pixels = tuple((neighboring_pixels - set(infected)) - set(borders))
+
+    return available_pixels
