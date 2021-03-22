@@ -24,7 +24,7 @@ def image_preprocessing(image: str):
     # Reversing dict from {'1 - 5': (345, 694)} to {(345, 694): '1 - 5'}
     reverse_population_points = {tuple(*i): key for key, value in population_mask_points.items() for i in value}
     borders = cv2.findNonZero(border_color).tolist()  # Finding coordinates
-    preprocessed_borders = tuple(tuple(i[0]) for i in borders)  # сделать координаты более читаемыми
+    preprocessed_borders = tuple(tuple(i[0]) for i in borders)  # make coordinates more readable
 
     return reverse_population_points, preprocessed_borders
 
