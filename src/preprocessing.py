@@ -32,6 +32,14 @@ def image_preprocessing(image: str):
 def spread_infection(pixel: tuple, infected: set, borders: tuple) -> tuple:
     """
     Finding available pixels for infection
+    Example
+    [18,19][19,19][20,19]
+    [18,20][19,20][20,20]
+    [18,21][19,20][20,21]
+    Where (19,20) is pixel that gives in parameter.
+    Function returns another pixels around the main. So function's return will see like this
+    ((20, 19), (20, 21), (20, 20), (18, 20), (18, 19)) with following parameters
+    spread_infection(tuple(19,20), set{(1, 2), (19, 19)}, tuple((19, 21), (18, 21)))
 
     :param pixel: coordinates of the pixel
     :param infected: set of already infected pixels
