@@ -1,5 +1,6 @@
 import cv2
 
+from src.modell import coronaSIR
 from src.preprocessing import image_preprocessing
 
 IMAGE_SRC = "./src/images/VerdenPopMindre.png"
@@ -32,3 +33,15 @@ cv2.destroyAllWindows()
 #  3. All infected pixels will be added to a list and colored in red.
 #
 #  4. Multiprocessing
+pixler = [0]
+Run = False
+
+while Run:
+    for i in pixler:
+        pixler[i].spredning
+        pixler[i].ny_S
+        pixler[i].ny_I
+        if pixler[i].infected == pixler[i].pop:
+            pixler.pop(i)
+    if total_infected == world_poulation:
+        Run = False
