@@ -35,7 +35,7 @@ class coronaSIR:
 
     def Spredning(self): # "Spre" smitter fra en pixel til en annen
         if self.infected == 0:
-            self.infected = 1
+            self.infected.append(1)
             pixler.append() # Legge til den nye pixelen
             
 pixler = [] # Alle pixler som har infisert
