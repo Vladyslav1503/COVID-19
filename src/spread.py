@@ -21,6 +21,7 @@ def finding_probability_of_infection(number_of_infected: int, total_population: 
     percentage_of_infected = number_of_infected * 100 / total_population
     # random number from (percentage_og_infected / range_shift)
     random_number = random() * 100 + (percentage_of_infected / range_shift)
+
     if limiter >= percentage_of_infected - random_number >= -limiter:
         return True
 
