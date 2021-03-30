@@ -15,6 +15,7 @@ def finding_probability_of_infection(number_of_infected: int, total_population: 
     """
     global infection_rate
     assert (total_population >= number_of_infected), "Invalid args input in function {finding_probability_of_infection}"
+
     limiter = log10(infection_rate) / 20  # range between limiter and -limiter
     range_shift = 100 / infection_rate  # reducing the range of random numbers, will split percentage of infected
     percentage_of_infected = number_of_infected * 100 / total_population
