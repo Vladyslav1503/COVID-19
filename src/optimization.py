@@ -1,29 +1,16 @@
-from typing import Callable
-
-__cached = {}
-
-
-def caching(function: Callable, *args):
+def caching(f):
     """
+    Decorator
     Improving performance by saving result of function into a dict
 
-    :param function: function that will be cached
-    :param args: arguments fot functions
+    :param f: function
     :return: cached result of function
     """
-    global __cached
-    if function in __cached.keys():
-        if args and args in __cached[function].keys():
-            return __cached[function][args]
-        elif args and args not in __cached[function].keys():
-            __cached[function][args] = function(*args)
-            return __cached[function][args]
+    f.cache = {}
 
-        return __cached[function]
-    else:
-        if args:
-            __cached[function] = {args: function(*args)}
-            return __cached[function][args]
+    def _f(*args, **kwargs):
+        if args not in f.cache:
+            f.cache[args] = f(*args, **kwargs)
+        return f.cache[args]
 
-        __cached[function] = function()
-        return __cached[function]
+    return _f
