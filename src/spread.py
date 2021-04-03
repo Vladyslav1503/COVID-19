@@ -4,7 +4,7 @@ from random import random
 infection_rate = 10
 
 
-def finding_probability_of_infection(number_of_infected: int, total_population: int) -> True or None:
+def finding_probability_of_infection(number_of_infected: int, total_population: int) -> True or False:
     """
     Function will return True if random number equals percentage of infected
     it will simulate when someone arrives to another pixel og infect another person
@@ -22,13 +22,12 @@ def finding_probability_of_infection(number_of_infected: int, total_population: 
     # random number from (percentage_og_infected / range_shift)
     random_number = random() * 100 + (percentage_of_infected / range_shift)
 
-    if limiter >= percentage_of_infected - random_number >= -limiter:
-        return True
+    return limiter >= percentage_of_infected - random_number >= -limiter
 
 
-def spread_infection(pixel: tuple, infected: set, borders: tuple) -> tuple:
+def available_neighbor_pixels(pixel: tuple, infected: set, borders: tuple) -> tuple:
     """
-    Finding available pixels for infection
+    Finding available neighbor pixels for infection
     Example
     [18,19][19,19][20,19]
     [18,20][19,20][20,20]
@@ -57,3 +56,37 @@ def spread_infection(pixel: tuple, infected: set, borders: tuple) -> tuple:
     available_pixels = tuple((neighboring_pixels - set(infected)) - set(borders))
 
     return available_pixels
+
+
+def choosing_next_infected_pixel(pixel: tuple, infected: set, borders: tuple, airports: tuple) -> tuple:
+    """
+    Finding pixel that will be infected next by checking airports and neighbor pixels.
+    If none of them are available chooses random a pixel beside already infected pixel
+    :param pixel: the infected pixel
+    :param infected: set of already infected pixels
+    :param borders: tuple of county borders
+    :param airports: tuple of all airports
+    :return: next available pixel
+    """
+    if pixel in airports:
+        next_pixel = airports[int(random() * len(airports))]
+    # Checking if any of neighbor pixels are available for infection
+    elif neighbor_pixels := available_neighbor_pixels(pixel=pixel, infected=infected, borders=borders):
+        if len(neighbor_pixels) > 1:
+            next_pixel = neighbor_pixels[int(random() * len(neighbor_pixels))]
+        elif len(neighbor_pixels) == 1:
+            next_pixel = neighbor_pixels[0]
+    else:
+        pass  # TODO random chose pixels that has not been infected
+    return next_pixel
+
+
+def finding_total_population(coordinates: dict, pixel: tuple) -> int:
+    """
+
+    :param coordinates: dict of coordinates as a key and population range as a value
+    :param pixel: the pixel's coordinates
+    :return: total population in the pixel
+    """
+    population_range = tuple(map(int, coordinates[pixel].split(' - ')))
+    return int(random() * population_range[1] + population_range[0])
