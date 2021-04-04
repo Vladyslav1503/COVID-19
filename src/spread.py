@@ -25,6 +25,21 @@ def finding_probability_of_infection(number_of_infected: int, total_population: 
     return limiter >= percentage_of_infected - random_number >= -limiter
 
 
+def have_not_been_infected(not_infected: set, infected: set, borders: tuple, all_pixels) -> tuple:
+    """
+    Choosing next pixel of neighbor pixels that have not been infected for all time or available pixel
+    :param not_infected: all neighbor pixels that have not been infected for all time
+    :param infected: set of already infected pixels
+    :param borders: tuple of county borders
+    :param all_pixels: all pixels from the map
+    :return: next randomly chosen pixel
+    """
+    if not_infected:
+        return tuple(not_infected)[int(random() * len(not_infected))]
+    available_pixels = tuple(set(all_pixels) - set(infected) - set(borders))
+    return available_pixels[int(random() * len(available_pixels))]
+
+
 def available_neighbor_pixels(pixel: tuple, infected: set, borders: tuple) -> tuple:
     """
     Finding available neighbor pixels for infection
@@ -58,32 +73,45 @@ def available_neighbor_pixels(pixel: tuple, infected: set, borders: tuple) -> tu
     return available_pixels
 
 
-def choosing_next_infected_pixel(pixel: tuple, infected: set, borders: tuple, airports: tuple) -> tuple:
+def choosing_next_infected_pixel(pixel: tuple, infected: set, borders: tuple, airports: tuple,
+                                 all_pixels: tuple) -> tuple:
     """
     Finding pixel that will be infected next by checking airports and neighbor pixels.
-    If none of them are available chooses random a pixel beside already infected pixel
+    If none of them are available chooses random a pixel beside already infected pixel or available pixel
     :param pixel: the infected pixel
     :param infected: set of already infected pixels
     :param borders: tuple of county borders
     :param airports: tuple of all airports
+    :param all_pixels: all pixels from the map
     :return: next available pixel
     """
+    next_pixel = None
+    if not hasattr(choosing_next_infected_pixel, 'not_infected'):
+        choosing_next_infected_pixel.not_infected = set()
+
     if pixel in airports:
         next_pixel = airports[int(random() * len(airports))]
     # Checking if any of neighbor pixels are available for infection
     elif neighbor_pixels := available_neighbor_pixels(pixel=pixel, infected=infected, borders=borders):
         if len(neighbor_pixels) > 1:
+            # choosing a random pixel from neighbor pixels
             next_pixel = neighbor_pixels[int(random() * len(neighbor_pixels))]
+            rest_of_neighbor_pixels = tuple(set(neighbor_pixels) - set(next_pixel))
+            #  adding not infected pixels to set. The set uses if none of neighbor pixels are available
+            choosing_next_infected_pixel.not_infected.add(rest_of_neighbor_pixels)
         elif len(neighbor_pixels) == 1:
             next_pixel = neighbor_pixels[0]
     else:
-        pass  # TODO random chose pixels that has not been infected
+        # choosing next pixel from not infected neighbor pixels for all time and other available pixels
+        next_pixel = have_not_been_infected(choosing_next_infected_pixel.not_infected, infected, borders, all_pixels)
+        if next_pixel in choosing_next_infected_pixel.not_infected:
+            choosing_next_infected_pixel.not_infected.remove(next_pixel)
     return next_pixel
 
 
 def finding_total_population(coordinates: dict, pixel: tuple) -> int:
     """
-
+    Calculation total population in the pixel in range that the map gives us
     :param coordinates: dict of coordinates as a key and population range as a value
     :param pixel: the pixel's coordinates
     :return: total population in the pixel

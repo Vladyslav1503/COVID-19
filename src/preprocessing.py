@@ -26,10 +26,15 @@ def image_preprocessing(image: str):
     borders = cv2.findNonZero(border_color).tolist()  # Finding coordinates
     preprocessed_borders = tuple(tuple(i[0]) for i in borders)  # make coordinates more readable
 
-    return reverse_population_points, preprocessed_borders
+    return reverse_population_points, preprocessed_borders, img
 
 
-def viewing(img: np.ndarray, infected: set):
+def showing(img: np.ndarray, infected: set):
+    """
+    Showing infected pixels on the map by color them in red
+    :param img: image read by open-cv2
+    :param infected: set of infected pixels
+    """
     for i in infected:
         x, y = i[0], i[1]
         img[y, x] = (0, 0, 255)
