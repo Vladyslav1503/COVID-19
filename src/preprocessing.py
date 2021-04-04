@@ -27,3 +27,12 @@ def image_preprocessing(image: str):
     preprocessed_borders = tuple(tuple(i[0]) for i in borders)  # make coordinates more readable
 
     return reverse_population_points, preprocessed_borders
+
+
+def viewing(img: np.ndarray, infected: set):
+    for i in infected:
+        x, y = i[0], i[1]
+        img[y, x] = (0, 0, 255)
+
+    cv2.imshow('title', img)
+    cv2.waitKey(1)
