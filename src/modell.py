@@ -32,13 +32,3 @@ class coronaSIR:
         # def ny_R(self): #Sette ny verdi til "recoverd"
         # self.recoverd.append(self.recoverd[-1] + (Y*self.infected[-2]))
         # Funksjon for å finne ut ny R: R + (Y * I)
-
-    def spredning(self): # "Spre" smitter fra en pixel til en annen
-        if self.infected[-1] == 0:
-            self.infected.append(1)
-            pixler.append(self) # Legge til den nye pixelen
-            
-pixler = [] # Alle pixler som har infisert
-
-
-
