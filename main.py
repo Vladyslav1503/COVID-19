@@ -12,17 +12,22 @@ infected_pixels = [START_POINT]
 
 def main(point_of_population, county_borders: tuple, airports: tuple, image):
     global infected_pixels
-
-    while set(infected_pixels) != set(population_points.keys()):
+    t = set()
+    while set(infected_pixels) != set(population_points.keys()):  #
         next_pixel = choosing_next_infected_pixel(pixel=infected_pixels[-1], infected=set(infected_pixels),
                                                   borders=county_borders, airports=airports,
-                                                  all_pixels=tuple(point_of_population.keys()))
-
+                                                  all_pixels=tuple(point_of_population.keys()),
+                                                  population_points=point_of_population)
         population = finding_total_population(coordinates=point_of_population, pixel=infected_pixels[-1])
-        # TODO run the model
+
+        # TODO Run model
         if finding_probability_of_infection(number_of_infected=1, total_population=population):
             infected_pixels.append(next_pixel)  # TODO Multiprocessing
+
         showing(img=image, infected=set(infected_pixels))
+    print('Max', max(t))
+    print('Min', min(t))
+    print('lol', sum(t) / len(t))
 
 
 if __name__ == '__main__':
