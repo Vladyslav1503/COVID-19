@@ -21,8 +21,8 @@ def main(point_of_population, county_borders: tuple, airports: tuple, image):
         population = finding_total_population(coordinates=point_of_population, pixel=infected_pixels[-1])
 
         # TODO Run model
-        if finding_probability_of_infection(number_of_infected=1, total_population=population):
-            infected_pixels.append(next_pixel)  # TODO Multiprocessing
+        # if finding_probability_of_infection(number_of_infected=1, total_population=population):
+        infected_pixels.append(next_pixel)  # TODO Multiprocessing
 
         showing(img=image, infected=set(infected_pixels))
     print('Max', max(t))
