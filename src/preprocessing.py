@@ -11,7 +11,6 @@ def image_preprocessing(image: str):
     """
     img = cv2.imread(image)  # read the image
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    border_color = cv2.inRange(img, np.array([119, 82, 82]), np.array([183, 203, 170]))  # making mask of borders
     # Specifying color mask for populations areas
     population_by_colors = {'1 - 5': (np.array([35, 16, 146]), np.array([94, 100, 208])),
                             '5 - 25': (np.array([80, 28, 0]), np.array([96, 170, 255])),
@@ -23,21 +22,18 @@ def image_preprocessing(image: str):
                               population_by_colors.items()}
     # Reversing dict from {'1 - 5': (345, 694)} to {(345, 694): '1 - 5'}
     reverse_population_points = {tuple(*i): key for key, value in population_mask_points.items() for i in value}
-    borders = cv2.findNonZero(border_color).tolist()  # Finding coordinates
-    preprocessed_borders = tuple(tuple(i[0]) for i in borders)  # make coordinates more readable
 
-    return reverse_population_points, preprocessed_borders, img
+    return reverse_population_points, img
 
 
-def showing(img: np.ndarray, infected: set):
+def showing(img: np.ndarray, pixel):
     """
     Showing infected pixels on the map by color them in red
     :param img: image read by open-cv2
-    :param infected: set of infected pixels
+    :param pixel:infected pixel
     """
-    for i in infected:
-        x, y = i[0], i[1]
-        img[y, x] = (0, 0, 255)
+    img[pixel[1], pixel[0]] = (0, 0, 255)
 
-    cv2.imshow('title', img)
+    cv2.imshow('title.png', img)
     cv2.waitKey(1)
+    # cv2.destroyAllWindows()

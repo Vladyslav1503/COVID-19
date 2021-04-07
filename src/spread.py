@@ -1,5 +1,5 @@
 from math import log10
-from random import random
+from random import random, choice
 
 infection_rate = 10
 
@@ -25,38 +25,7 @@ def finding_probability_of_infection(number_of_infected: int, total_population: 
     return limiter >= percentage_of_infected - random_number >= -limiter
 
 
-def have_not_been_infected(not_infected: set, infected: set, borders: tuple, all_pixels) -> tuple:
-    """
-    Choosing next pixel of neighbor pixels that have not been infected for all time or available pixel
-    :param not_infected: all neighbor pixels that have not been infected for all time
-    :param infected: set of already infected pixels
-    :param borders: tuple of county borders
-    :param all_pixels: all pixels from the map
-    :return: next randomly chosen pixel
-    """
-    if not_infected:
-        return list(not_infected)[int(random() * len(not_infected))]
-    available_pixels = tuple(set(all_pixels) - set(infected) - set(borders))
-    return available_pixels[int(random() * len(available_pixels))]
-
-
-def available_neighbor_pixels(pixel: tuple, infected: set, population_points: dict) -> tuple:
-    """
-    Finding available neighbor pixels for infection
-    Example
-    [18,19][19,19][20,19]
-    [18,20][19,20][20,20]
-    [18,21][19,20][20,21]
-    Where (19,20) is pixel that gives in parameter.
-    Function returns another pixels around the main. So function's return will see like this
-    ((20, 19), (20, 21), (20, 20), (18, 20), (18, 19)) with following parameters
-    spread_infection(tuple(19,20), set{(1, 2), (19, 19)}, tuple((19, 21), (18, 21)))
-
-    :param pixel: coordinates of the pixel
-    :param infected: set of already infected pixels
-    :param population_points:
-    :return: tuple of available for infection pixels
-    """
+def spread_to_neighboring(pixel, keys):
     finding_neighboring_pixel = {1: lambda x: (x[0] - 1, x[1]),
                                  2: lambda x: (x[0] - 1, x[1] - 1),
                                  3: lambda x: (x[0], x[1] - 1),
@@ -65,59 +34,27 @@ def available_neighbor_pixels(pixel: tuple, infected: set, population_points: di
                                  6: lambda x: (x[0] + 1, x[1] + 1),
                                  7: lambda x: (x[0], x[1] + 1),
                                  8: lambda x: (x[0] - 1, x[1] + 1)}
-    # set of 8 neighbor pixels
-    neighboring_pixels = set()
-    for i in finding_neighboring_pixel.keys():
-        b = finding_neighboring_pixel[i](pixel)
-        if population_points.get(b):
-            neighboring_pixels.add(b)
-    # removing pixels that are infected or border
-    if neighboring_pixels in infected:
-        neighboring_pixels = neighboring_pixels.difference(infected)
-    return tuple(neighboring_pixels)
+
+    neighboring_pixels = [finding_neighboring_pixel[i](pixel) for i in range(1, 9) if
+                          finding_neighboring_pixel[i](pixel) in keys]
+    return choice(neighboring_pixels) if neighboring_pixels else False
 
 
-def choosing_next_infected_pixel(pixel: tuple, infected: set, borders: tuple, airports: tuple,
-                                 all_pixels: tuple, population_points: dict):
+def choosing_next_infected_pixel(pixel: tuple, airports: tuple, all_pixels):
     """
     Finding pixel that will be infected next by checking airports and neighbor pixels.
     If none of them are available chooses random a pixel beside already infected pixel or available pixel
     :param pixel: the infected pixel
-    :param infected: set of already infected pixels
-    :param borders: tuple of county borders
     :param airports: tuple of all airports
     :param all_pixels: all pixels from the map
-    :param population_points:
     :return: next available pixel
     """
-    not_infected = set()
+    if pixel in airports:
+        return choice(airports)
 
-    def inner():
-        nonlocal not_infected
-        next_pixel = None
-
-        if pixel in airports:
-            next_pixel = airports[int(random() * len(airports))]
-        # Checking if any of neighbor pixels are available for infection
-        if neighbor_pixels := available_neighbor_pixels(pixel=pixel, infected=infected,
-                                                        population_points=population_points):
-            if len(neighbor_pixels) > 1:
-                # choosing a random pixel from neighbor pixels
-                next_pixel = neighbor_pixels[int(random() * len(neighbor_pixels))]
-                rest_of_neighbor_pixels = set(neighbor_pixels).difference(next_pixel)
-                #  adding not infected pixels to set. The set uses if none of neighbor pixels are available
-                for i in rest_of_neighbor_pixels:
-                    not_infected.add(i)
-            elif len(neighbor_pixels) == 1:
-                next_pixel = neighbor_pixels[0]
-        else:
-            # choosing next pixel from not infected neighbor pixels for all time and other available pixels
-            next_pixel = have_not_been_infected(not_infected, infected, borders, all_pixels)
-            if next_pixel in not_infected:
-                not_infected.remove(next_pixel)
-        return next_pixel
-
-    return inner()
+    elif neighbor_pixels := spread_to_neighboring(pixel, all_pixels):
+        return neighbor_pixels
+    return choice(tuple(all_pixels))
 
 
 def finding_total_population(coordinates: dict, pixel: tuple) -> int:
@@ -127,5 +64,5 @@ def finding_total_population(coordinates: dict, pixel: tuple) -> int:
     :param pixel: the pixel's coordinates
     :return: total population in the pixel
     """
-    population_range = tuple(map(int, coordinates[pixel].split(' - ')))
-    return int(random() * population_range[1] + population_range[0])
+    start, end = tuple(map(int, coordinates[pixel].split(' - ')))
+    return int(random() * end + start)
